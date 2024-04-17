@@ -1,64 +1,68 @@
-﻿@page "/productos"
+@page "/productos"
 @rendermode InteractiveServer
 
 @using Examen_1P.Data
 
 <h3>Productos</h3>
 
-@if (_numeroInventarioRepetido)
-{
-    <div class="alert alert-danger" role="alert">
-        El número de inventario se encuentra registrado. Debe ser único
-    </div>
-}
-
-<EditForm Model="_nuevoProducto" FormName="productos" OnValidSubmit="AgregarEditarProducto">
-    <DataAnnotationsValidator />
-    
-
-    <div class="form-group">
-        <label for="numeroInventario">Número de Inventario:</label>
-        <InputNumber @bind-Value="_nuevoProducto.NumeroInventario" class="form-control" />
-        <ValidationMessage For="() => _nuevoProducto.NumeroInventario" />
-    </div>
-    <div class="form-group">
-        <label for="nombre">Nombre:</label>
-        <InputText @bind-Value="_nuevoProducto.Nombre" class="form-control" />
-        <ValidationMessage For="() => _nuevoProducto.Nombre" />
-    </div>
-
-    <div class="form-group">
-        <label>Departamento:</label>
-        <div class="form-check">
-            <InputRadioGroup @bind-Value="_nuevoProducto.Departamento">
-                <div class="form-check">
-                    <InputRadio TValue="string" class="form-check-input" value="Frutas" />
-                    <label class="form-check-label">Frutas</label>
-                </div>
-                <div class="form-check">
-                    <InputRadio TValue="string" class="form-check-input" value="Verduras" />
-                    <label class="form-check-label">Verduras</label>
-                </div>
-                <div class="form-check">
-                    <InputRadio TValue="string" class="form-check-input" value="Lácteos" />
-                    <label class="form-check-label">Lácteos</label>
-                </div>
-            </InputRadioGroup>
-        </div>
-        <ValidationMessage For="() => _nuevoProducto.Departamento" />
-    </div>
 
 
-    <button type="submit" class="btn btn-primary">@(_editando ? "Guardar Cambios" : "Guardar")</button>
-    <button type="button" class="btn btn-danger" @onclick="Cancelar">Cancelar</button>
-    @if (_editando)
+
+    @if (_numeroInventarioRepetido)
     {
-        <button type="button" class="btn btn-secondary" @onclick="CancelarEdicion">Cancelar Edición</button>
+        <div class="alert alert-danger" role="alert">
+            El número de inventario se encuentra registrado. Debe ser único
+        </div>
     }
-    <br />
-    <button @onclick="MostrarExistencias" class="btn btn-secondary mt-3">@(_mostrarExistencias ? "Listado" : "Existencias")</button>
 
-</EditForm>
+    <EditForm Model="_nuevoProducto" FormName="productos" OnValidSubmit="AgregarEditarProducto">
+        <DataAnnotationsValidator />
+
+
+        <div class="form-group">
+            <label for="numeroInventario">Número de Inventario:</label>
+            <InputNumber @bind-Value="_nuevoProducto.NumeroInventario" class="form-control" />
+            <ValidationMessage For="() => _nuevoProducto.NumeroInventario" />
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <InputText @bind-Value="_nuevoProducto.Nombre" class="form-control" />
+            <ValidationMessage For="() => _nuevoProducto.Nombre" />
+        </div>
+
+        <div class="form-group">
+            <label>Departamento:</label>
+            <div class="form-check">
+                <InputRadioGroup @bind-Value="_nuevoProducto.Departamento">
+                    <div class="form-check">
+                        <InputRadio TValue="string" class="form-check-input" value="Frutas" />
+                        <label class="form-check-label">Frutas</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio TValue="string" class="form-check-input" value="Verduras" />
+                        <label class="form-check-label">Verduras</label>
+                    </div>
+                    <div class="form-check">
+                        <InputRadio TValue="string" class="form-check-input" value="Lácteos" />
+                        <label class="form-check-label">Lácteos</label>
+                    </div>
+                </InputRadioGroup>
+            </div>
+            <ValidationMessage For="() => _nuevoProducto.Departamento" />
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">@(_editando ? "Guardar Cambios" : "Guardar")</button>
+        <button type="button" class="btn btn-danger" @onclick="Cancelar">Cancelar</button>
+        @if (_editando)
+        {
+            <button type="button" class="btn btn-secondary" @onclick="CancelarEdicion">Cancelar Edición</button>
+        }
+        <br />
+        
+
+    </EditForm>
+
 
 <h3>Lista de Productos</h3>
 
@@ -123,6 +127,9 @@ else
 }
 }
 
+
+<button @onclick="MostrarExistencias" class="btn btn-secondary mt-3">@(_mostrarExistencias ? "Listado" : "Existencias")</button>
+
 @code {
     private List<Producto> _productos = new List<Producto>();
     private Producto _nuevoProducto = new Producto();
@@ -130,6 +137,7 @@ else
     private bool _numeroInventarioRepetido;
     private bool _mostrarExistencias = false;
     private bool _editando = false;
+    private bool _mostrandoFormulario = true;
 
     private void AgregarEditarProducto()
     {
@@ -231,6 +239,7 @@ else
 
     private void MostrarExistencias()
     {
+        _mostrandoFormulario = !_mostrandoFormulario;
         _mostrarExistencias = !_mostrarExistencias;
     }
 
